@@ -18,12 +18,35 @@ function updateVisualization(orders) {
     // Step 1: Append new circles for new orders
     // The color of the circle should be brown for coffee orders and green for tea
     // Radius should vary with the price
+    var circles = svg.selectAll("circle").data(orders);
+
+    circles.enter()
+        .append("circle")
+        .merge(circles)
+        .transition()
+        .attr("fill", function (d) {
+            if (d.product === "coffee") {
+                return "brown";
+            } else {
+                return "green";
+            }
+        })
+        .attr("r", function (d) {
+            return 20*d.price;
+        })
+        .attr("cx", function (d, i) {
+            return (i*150) + 200;
+        })
+        .attr("cy", 100);
 
 
     // Step 2: Delete elements that have been removed from orders
 
+    circles.exit().transition().duration(100).remove();
 
     // Step 3: Update the text label
+
+    textLine.text("Orders: " + orders.length);
 }
 
 // Part 2: Assignment - Synthesis of everything we've learned!
